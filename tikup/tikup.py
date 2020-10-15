@@ -1,13 +1,14 @@
-from TikTokApi import TikTokApi
-import os
-import youtube_dl
-from internetarchive import upload
-from internetarchive import get_item
 import argparse
+import os
 import re
+import shutil
 import sys
 import time
-import shutil
+
+import youtube_dl
+from internetarchive import get_item, upload
+from TikTokApi import TikTokApi
+
 
 def getVersion():
     return '2020.10.06.1'
