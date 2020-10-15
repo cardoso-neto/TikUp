@@ -143,12 +143,12 @@ def downloadTikToks(username, tiktoks, file, downloadType):
             except KeyError:
                 tiktok = tiktok['itemInfos']['id']
         if file is not None and doesIdExist(lines, tiktok):
-            print (tiktok + " has already been archived.")
+            print(tiktok + " has already been archived.")
         else:
             tiktokObj = getTikTokObject(tiktok)
             username = getUsername(tiktok)
             if username is None:
-                print (tiktok + ' has been deleted or is private')
+                print(tiktok + ' has been deleted or is private')
                 ids.append(tiktok)
             else:
                 downloadTikTok(username, tiktokObj, cwd, 1)
@@ -159,7 +159,7 @@ def downloadTikToks(username, tiktoks, file, downloadType):
                     time.sleep(1)
                     downloadTikTok(username, tiktokObj, cwd, i)
                     i += 1
-                print (tiktok + ' has been downloaded')
+                print(tiktok + ' has been downloaded')
                 ids.append(tiktok)
     return ids
 
@@ -213,7 +213,7 @@ def main():
     if args.hashtag: #  Download hashtag
         downloadType = 'hashtag'
         tiktoks = getHashtagVideos(username, limit)
-    elif args.id: #  Download ID
+    elif args.id: #  Download user ID
         downloadType = 'id'
         tiktoks = [username]
     elif args.liked: #  Download liked
