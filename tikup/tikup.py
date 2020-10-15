@@ -13,6 +13,7 @@ from TikTokApi import TikTokApi
 def getVersion():
     return '2020.10.06.1'
 
+
 def getUsernameVideos(username, limit):
     api = TikTokApi()
     if limit != None:
@@ -21,6 +22,7 @@ def getUsernameVideos(username, limit):
         count = 9999
     tiktoks = api.byUsername(username, count=count)
     return tiktoks
+
 
 def getHashtagVideos(hashtag, limit):
     api = TikTokApi()
@@ -31,6 +33,7 @@ def getHashtagVideos(hashtag, limit):
     tiktoks = api.byHashtag(hashtag, count=count)
     return tiktoks
 
+
 def getLikedVideos(username, limit):
     api = TikTokApi()
     if limit != None:
@@ -39,6 +42,7 @@ def getLikedVideos(username, limit):
         count = 9999
     tiktoks = api.userLikedbyUsername(username, count=count)
     return tiktoks
+
 
 def downloadTikTok(username, tiktok, cwd, varTry):
     try:
@@ -97,6 +101,7 @@ def downloadTikTok(username, tiktok, cwd, varTry):
     json.close()
     os.chdir(cwd)
 
+
 def uploadTikTok(username, tiktok, deletionStatus, file):
     regex = re.compile('[0-9]{17}')
     regexA = re.compile('[0-9]{18}')
@@ -119,6 +124,7 @@ def uploadTikTok(username, tiktok, deletionStatus, file):
         if file != None:
             file.write(str(tiktok))
             file.write('\n')
+
 
 def downloadTikToks(username, tiktoks, file, downloadType):
     cwd = os.getcwd()
@@ -156,15 +162,18 @@ def downloadTikToks(username, tiktoks, file, downloadType):
                 ids.append(tiktok)
     return ids
 
+
 def uploadTikToks(tiktoks, file, delete):
     for tiktok in tiktoks:
         uploadTikTok(getUsername(tiktok), tiktok, delete, file)
+
 
 def doesIdExist(lines, tiktok):
     for l in lines:
         if (l == tiktok):
             return True
     return False
+
 
 def getUsername(tiktokId):
     api = TikTokApi()
@@ -174,10 +183,12 @@ def getUsername(tiktokId):
     except:
         return None
 
+
 def getTikTokObject(tiktokId):
     api = TikTokApi()
     thing = api.getTikTokById(tiktokId)
     return thing
+
 
 def main():
     os.chdir(os.path.expanduser('~'))
@@ -227,6 +238,7 @@ def main():
     except:
         pass
     print('')
+
 
 if __name__ == "__main__":
     main()
