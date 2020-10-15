@@ -1,11 +1,22 @@
-from setuptools import setup, find_packages
 from os import path
+from setuptools import setup, find_packages
+from typing import List
+
 from tikup.tikup import getVersion
 
-here = path.abspath(path.dirname(__file__))
+
+def read_multiline_as_list(file_path: str) -> List[str]:
+    with open(file_path) as fh:
+        contents = fh.read().split("\n")
+        if contents[-1] == "":
+            contents.pop()
+        return contents
+
 
 with open('README.md', 'r') as f:
     long_description = f.read()
+
+requirements = read_multiline_as_list("requirements.txt")
 
 setup(
     name='tikup',
@@ -22,5 +33,5 @@ setup(
         ],
     },
     python_requires='>=3.5, <4',
-    install_requires=['internetarchive>=1.9.4', 'TikTokApi>=3.5.2', 'youtube-dl>=2020.09.20']
+    install_requires=requirements,
 )
