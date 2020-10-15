@@ -210,16 +210,16 @@ def main():
             file = open('archive.txt', 'r+')
     else:
         file = None
-    if args.hashtag: #  Download hashtag
+    if args.hashtag:  # Download hashtag
         downloadType = 'hashtag'
         tiktoks = getHashtagVideos(username, limit)
-    elif args.id: #  Download user ID
+    elif args.id:  # Download user ID
         downloadType = 'id'
         tiktoks = [username]
-    elif args.liked: #  Download liked
+    elif args.liked:  # Download liked
         downloadType = 'liked'
         tiktoks = getLikedVideos(username, limit)
-    else: #  Download username
+    else:  # Download username
         downloadType = 'username'
         tiktoks = getUsernameVideos(username, limit)
     tiktoks = downloadTikToks(username, tiktoks, file, downloadType)
