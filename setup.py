@@ -1,13 +1,14 @@
 from os import path
-from setuptools import setup, find_packages
 from typing import List
+
+from setuptools import setup, find_packages
 
 from tikup.tikup import getVersion
 
 
 def read_multiline_as_list(file_path: str) -> List[str]:
-    with open(file_path) as fh:
-        contents = fh.read().split("\n")
+    with open(file_path) as file_handler:
+        contents = file_handler.read().split("\n")
         if contents[-1] == "":
             contents.pop()
         return contents
