@@ -1,4 +1,3 @@
-import argparse
 import os
 import re
 import shutil
@@ -8,6 +7,8 @@ import time
 import youtube_dl
 from internetarchive import get_item, upload
 from TikTokApi import TikTokApi
+
+from .argparser import parse_args
 
 
 def getVersion():
@@ -195,19 +196,13 @@ def main():
     if (os.path.exists('./.tikup') == False):
         os.mkdir('./.tikup')
     os.chdir('./.tikup')
-    parser = argparse.ArgumentParser(description='An auto downloader and uploader for TikTok videos.')
-    parser.add_argument('user')
-    parser.add_argument('--no-delete', action='store_false', help="don't delete files when done")
-    parser.add_argument('--hashtag', action='store_true', help="download hashtag instead of username")
-    parser.add_argument('--limit', help="set limit on amount of TikToks to download")
-    parser.add_argument('--use-download-archive', action='store_true', help='record the video url to the download archive. This will download only videos not listed in the archive file. Record the IDs of all downloaded videos in it.')
-    parser.add_argument('--id', action='store_true', help='download this video ID')
-    parser.add_argument('--liked', action='store_true', help='download the user\'s liked posts')
-    args = parser.parse_args()
+
+    args = parse_args()
     username = args.user
     delete = args.no_delete
     limit = args.limit
     archive = args.use_download_archive
+    
     downloadType = ''
     if (archive == True):
         try:
