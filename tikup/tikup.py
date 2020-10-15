@@ -17,7 +17,7 @@ def getVersion():
 
 def getUsernameVideos(username, limit):
     api = TikTokApi()
-    if limit != None:
+    if limit is not None:
         count = int(limit)
     else:
         count = 9999
@@ -27,7 +27,7 @@ def getUsernameVideos(username, limit):
 
 def getHashtagVideos(hashtag, limit):
     api = TikTokApi()
-    if limit != None:
+    if limit is not None:
         count = int(limit)
     else:
         count = 9999
@@ -37,7 +37,7 @@ def getHashtagVideos(hashtag, limit):
 
 def getLikedVideos(username, limit):
     api = TikTokApi()
-    if limit != None:
+    if limit is not None:
         count = int(limit)
     else:
         count = 9999
@@ -66,10 +66,10 @@ def downloadTikTok(username, tiktok, cwd, varTry):
         'restrictfilenames': True,
         'outtmpl': tiktokID + '.mp4',
     }
-    if (os.path.exists(tiktokID) == False):
+    if not os.path.exists(tiktokID):
         os.mkdir(tiktokID)
     os.chdir(tiktokID)
-    if (varTry % 5 != 0):
+    if varTry % 5 != 0:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             # ydl.download([tiktok['itemInfo']['itemStruct']['video']['downloadAddr']])
             ydl.download(['https://www.tiktok.com/@' + username + '/video/' + tiktokID])
@@ -83,7 +83,7 @@ def downloadTikTok(username, tiktok, cwd, varTry):
         mp4 = open(tiktokID + '.mp4', "r", encoding="latin-1")
         # For some reason, ytdl sometimes downloads the HTML page instead of the video
         # this removes the HTML
-        if (str(mp4.read())[:15] == '<!DOCTYPE html>'):
+        if str(mp4.read())[:15] == '<!DOCTYPE html>':
             mp4.close()
             os.remove(tiktokID + '.mp4')
         else:
@@ -94,7 +94,7 @@ def downloadTikTok(username, tiktok, cwd, varTry):
     for i in x:
         if i.endswith('.unknown_video'):
             base = os.path.splitext(i)[0]
-            if (os.path.exists(base + '.mp4')):
+            if os.path.exists(base + '.mp4'):
                 os.remove(base + '.mp4')
             os.rename(i, base + '.mp4')
     json = open("tiktok_info.json", "w", encoding="utf-8")
@@ -109,20 +109,20 @@ def uploadTikTok(username, tiktok, deletionStatus, file):
     regexB = re.compile('[0-9]{19}')
     regexC = re.compile('[0-9]{8}')
     regexD = re.compile('[0-9]{9}')
-    if (os.path.isdir(tiktok) and (regex.match(str(tiktok)) or (regexA.match(str(tiktok))) or (regexB.match(str(tiktok))) or (regexC.match(str(tiktok))) or (regexD.match(str(tiktok))))):
+    if os.path.isdir(tiktok) and (regex.match(str(tiktok)) or (regexA.match(str(tiktok))) or (regexB.match(str(tiktok))) or (regexC.match(str(tiktok))) or (regexD.match(str(tiktok)))):
         item = get_item('tiktok-' + tiktok)
-        if (username ==  None):
-            if (file != None):
+        if username is None:
+            if file is not None:
                 file.write(str(tiktok))
                 file.write('\n')
             return None
         item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp ' + getVersion()), retries=9001, retries_sleep=60)
-        if (deletionStatus == True):
+        if deletionStatus:
             os.rmdir(tiktok)
-        print ()
-        print ('Uploaded to https://archive.org/details/tiktok-' + tiktok)
-        print ()
-        if file != None:
+        print()
+        print('Uploaded to https://archive.org/details/tiktok-' + tiktok)
+        print()
+        if file is not None:
             file.write(str(tiktok))
             file.write('\n')
 
@@ -137,23 +137,23 @@ def downloadTikToks(username, tiktoks, file, downloadType):
         lines = ''
     ids = []
     for tiktok in tiktoks:
-        if (str(type(tiktok)) == '<class \'dict\'>'):
+        if str(type(tiktok)) == '<class \'dict\'>':
             try:
                 tiktok = tiktok['id']
             except KeyError:
                 tiktok = tiktok['itemInfos']['id']
-        if (file != None and doesIdExist(lines, tiktok)):
+        if file is not None and doesIdExist(lines, tiktok):
             print (tiktok + " has already been archived.")
         else:
             tiktokObj = getTikTokObject(tiktok)
             username = getUsername(tiktok)
-            if (username == None):
+            if username is None:
                 print (tiktok + ' has been deleted or is private')
                 ids.append(tiktok)
             else:
                 downloadTikTok(username, tiktokObj, cwd, 1)
                 i = 1
-                while (os.path.exists(tiktok + '/' + tiktok + '.mp4') == False):
+                while not os.path.exists(tiktok + '/' + tiktok + '.mp4'):
                     tiktokObj = getTikTokObject(tiktok)
                     username = getUsername(tiktok)
                     time.sleep(1)
@@ -170,10 +170,7 @@ def uploadTikToks(tiktoks, file, delete):
 
 
 def doesIdExist(lines, tiktok):
-    for l in lines:
-        if (l == tiktok):
-            return True
-    return False
+    return tiktok in lines
 
 
 def getUsername(tiktokId):
@@ -193,7 +190,7 @@ def getTikTokObject(tiktokId):
 
 def main():
     os.chdir(os.path.expanduser('~'))
-    if (os.path.exists('./.tikup') == False):
+    if not os.path.exists('./.tikup'):
         os.mkdir('./.tikup')
     os.chdir('./.tikup')
 
@@ -204,7 +201,7 @@ def main():
     archive = args.use_download_archive
     
     downloadType = ''
-    if (archive == True):
+    if archive:
         try:
             file = open('archive.txt', 'r+')
         except FileNotFoundError:
@@ -213,13 +210,13 @@ def main():
             file = open('archive.txt', 'r+')
     else:
         file = None
-    if (args.hashtag == True): #  Download hashtag
+    if args.hashtag: #  Download hashtag
         downloadType = 'hashtag'
         tiktoks = getHashtagVideos(username, limit)
-    elif (args.id == True): #  Download ID
+    elif args.id: #  Download ID
         downloadType = 'id'
         tiktoks = [username]
-    elif (args.liked == True): #  Download liked
+    elif args.liked: #  Download liked
         downloadType = 'liked'
         tiktoks = getLikedVideos(username, limit)
     else: #  Download username
