@@ -66,7 +66,7 @@ def downloadTikTok(username, tiktok, cwd, varTry):
     os.chdir(tiktokID)
     if (varTry % 5 != 0):
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            #ydl.download([tiktok['itemInfo']['itemStruct']['video']['downloadAddr']])
+            # ydl.download([tiktok['itemInfo']['itemStruct']['video']['downloadAddr']])
             ydl.download(['https://www.tiktok.com/@' + username + '/video/' + tiktokID])
     else:
         api = TikTokApi()
@@ -76,7 +76,8 @@ def downloadTikTok(username, tiktok, cwd, varTry):
         shutil.rmtree('tmp')
     try:
         mp4 = open(tiktokID + '.mp4', "r", encoding="latin-1")
-#For some reason, ytdl sometimes downloads the HTML page instead of the video, so this removes the HTML
+        # For some reason, ytdl sometimes downloads the HTML page instead of the video
+        # this removes the HTML
         if (str(mp4.read())[:15] == '<!DOCTYPE html>'):
             mp4.close()
             os.remove(tiktokID + '.mp4')
@@ -206,16 +207,16 @@ def main():
             file = open('archive.txt', 'r+')
     else:
         file = None
-    if (args.hashtag == True): ## Download hashtag
+    if (args.hashtag == True): #  Download hashtag
         downloadType = 'hashtag'
         tiktoks = getHashtagVideos(username, limit)
-    elif (args.id == True): ## Download ID
+    elif (args.id == True): #  Download ID
         downloadType = 'id'
         tiktoks = [username]
-    elif (args.liked == True): ## Download liked
+    elif (args.liked == True): #  Download liked
         downloadType = 'liked'
         tiktoks = getLikedVideos(username, limit)
-    else: ## Download username
+    else: #  Download username
         downloadType = 'username'
         tiktoks = getUsernameVideos(username, limit)
     tiktoks = downloadTikToks(username, tiktoks, file, downloadType)
