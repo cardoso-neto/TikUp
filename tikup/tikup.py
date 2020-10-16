@@ -109,22 +109,44 @@ def uploadTikTok(username, tiktok, deletionStatus, file):
     regexB = re.compile('[0-9]{19}')
     regexC = re.compile('[0-9]{8}')
     regexD = re.compile('[0-9]{9}')
-    if os.path.isdir(tiktok) and (regex.match(str(tiktok)) or (regexA.match(str(tiktok))) or (regexB.match(str(tiktok))) or (regexC.match(str(tiktok))) or (regexD.match(str(tiktok)))):
-        item = get_item('tiktok-' + tiktok)
-        if username is None:
+    if os.path.isdir(tiktok):
+        if (
+            regex.match(str(tiktok))
+            or (regexA.match(str(tiktok)))
+            or (regexB.match(str(tiktok)))
+            or (regexC.match(str(tiktok)))
+            or (regexD.match(str(tiktok)))
+        ):  # TODO: use or regex with "|" instead of this
+            item = get_item('tiktok-' + tiktok)
+            if username is None:
+                if file is not None:
+                    file.write(str(tiktok))
+                    file.write('\n')
+                return None
+            item.upload(
+                './' + tiktok + '/',
+                verbose=True,
+                checksum=True,
+                delete=deletionStatus,
+                metadata=dict(
+                    collection='opensource_media',
+                    subject='tiktok',
+                    creator=username,
+                    title='TikTok Video by ' + username,
+                    originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok,
+                    scanner='TikUp ' + getVersion(),
+                ),
+                retries=9001,
+                retries_sleep=60,
+            )
+            if deletionStatus:
+                os.rmdir(tiktok)
+            print()
+            print('Uploaded to https://archive.org/details/tiktok-' + tiktok)
+            print()
             if file is not None:
                 file.write(str(tiktok))
                 file.write('\n')
-            return None
-        item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp ' + getVersion()), retries=9001, retries_sleep=60)
-        if deletionStatus:
-            os.rmdir(tiktok)
-        print()
-        print('Uploaded to https://archive.org/details/tiktok-' + tiktok)
-        print()
-        if file is not None:
-            file.write(str(tiktok))
-            file.write('\n')
 
 
 def downloadTikToks(username, tiktoks, file, downloadType):
@@ -199,7 +221,7 @@ def main():
     delete = args.no_delete
     limit = args.limit
     archive = args.use_download_archive
-    
+
     downloadType = ''
     if archive:
         try:
