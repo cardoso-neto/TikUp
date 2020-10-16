@@ -33,3 +33,11 @@ optional arguments:
   --liked               download the user's liked posts
   --sort                sort into folders based on TikTok username
 ```
+
+**Internet Archive upload**
+
+To interact with the Internet Archive, you will first need to [create an IA account](https://archive.org/account/login.createaccount.php).
+
+Confirm your account and note down your email address and password.
+
+Then run `ia configure` and log in.
